@@ -1,8 +1,15 @@
-# Feature Descriptors
-import numpy as np
-from skimage import feature
+"""
+Class to compute Feature Descriptors for each model.
+"""
+
 import img_util as iu
 import config
+
+import os
+import json
+import numpy as np
+from skimage import feature
+
 
 
 class feature_descriptor:
@@ -61,3 +68,48 @@ class feature_descriptor:
 	@staticmethod
 	def hog_feat_desc(img_id):
 		print('\nIn HOG, ', img_id)
+
+
+
+	@staticmethod
+	def compute_lbp_vec(path):
+		"""
+		Computes the LBP feature descriptor for all the images in the provided path.
+		:param path: Path of directory containing images.
+		:return: None
+		"""
+		LBP_map = {}    # Will store list of images paired with their corresponding descriptors
+		for img_file in os.listdir(path):
+			image = iu.img_util.open_image_grayscale(path + '/' + img_file)
+			# print('Image File: ', path + '/' + img_file)
+			# print('Image: ', image)
+
+			block_wt = block_ht = 100
+			unified_feat_desc = []
+			bins = 10
+
+			# Generate histogram for each block
+			for x in range(0, image.shape[0], block_wt):
+				for y in range(0, image.shape[1], block_ht):
+					blocks = image[x: (x + block_wt), y: (y + block_ht)]
+					lbp_img = feature_descriptor.lbp(blocks, "uniform")
+					hist_vect = iu.img_util.hist(lbp_img, bins)
+					unified_feat_desc.append(hist_vect[0])
+
+			LBP_map[img_file] = (np.array(unified_feat_desc)).tolist()
+
+		# Store the unified descriptor in JSON file
+		feature_descriptor_file = config.FEAT_DESC_DUMP + 'lbp.json'
+		with open(feature_descriptor_file, 'w', encoding='utf-8') as outfile:
+			json.dump(LBP_map, outfile, ensure_ascii=True, indent=2)
+
+
+
+	@staticmethod
+	def compute_hog_vec(path):
+		"""
+		Computes HOG feature descriptor for all the images in the provided path.
+		:param path: Path of the directory containing images.
+		:return: None
+		"""
+		print('\nIn compute_hog_vec')

@@ -1,12 +1,17 @@
-"""Main program for Phase 1 Code"""
+"""Task 1 Code
+    1. Accepts Image ID from the user
+    2. Accepts the type of model to use (LBP or HOG)
+    3. Displays Feature Descriptor in Human Readable Form
+"""
 import sys
 import feature_descriptor
+
+
 
 def main():
     img_id = input('\nEnter the image ID: ')
     while True:
         feat_ch = input('\n1. LBP\n2. HOG\n3. Exit\nEnter Choice: ')
-        print('ur choice', feat_ch, type(feat_ch), feat_ch==1)
         if feat_ch == '1':
             feature_descriptor.feature_descriptor.lbp_feat_desc(img_id)
         elif feat_ch == '2':
