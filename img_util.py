@@ -39,7 +39,6 @@ class img_util:
 		:param bins: Number of bins in the histogram.
 		:return: Returns the histogram vector computed for the Image.
 		"""
-
 		flattened_arr = np.ravel(img)
 		hist_arr = np.histogram(flattened_arr, bins, range=(0, bins))       # The range mentions the min and max value of the hist
 		return hist_arr

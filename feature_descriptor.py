@@ -8,8 +8,11 @@ import config
 import os
 import json
 import numpy as np
-from skimage import feature
 import operator
+from skimage import feature
+from skimage import io
+from skimage.feature import hog
+from skimage.transform import rescale
 
 
 
@@ -34,9 +37,9 @@ class feature_descriptor:
 	@staticmethod
 	def lbp_feat_desc(img_id):
 		"""
-		Returns the LBP histogram vector for a given Image ID.
+		Prints the LBP histogram vector for a given Image ID.
 		:param img_id: The image ID of the image to be processed.
-		:return: List of histogram vectors for every 100x100 blocks in the image.
+		:return: None
 		"""
 
 		print("\nIn LBP, ", img_id)
@@ -68,7 +71,17 @@ class feature_descriptor:
 
 	@staticmethod
 	def hog_feat_desc(img_id):
-		print('\nIn HOG, ', img_id)
+		"""
+		Prints the HOG feature descriptor vector.
+		:param img_id: Image ID of image to be processed.
+		:return: None
+		"""
+		image = io.imread(config.IMG_LIST_PATH + img_id + '.jpg')
+		iu.img_util.display_image(image, 'Image: ' + img_id)
+		rescaled_image = rescale(image, 0.1, anti_aliasing=True)
+		hog_vec, hog_img = hog(rescaled_image, orientations=9, pixels_per_cell=(8, 8), cells_per_block=(2, 2), visualize=True, multichannel=True)
+		print('\nHOG vector calculated: ', hog_vec, '\nHOG Image: \n', hog_img)
+		iu.img_util.display_image(hog_img, 'HOG Image')
 
 
 
@@ -115,6 +128,8 @@ class feature_descriptor:
 		"""
 		print('\nIn compute_hog_vec')
 
+
+	@staticmethod
 	def fetch_img_desc(img_id, model_ch):
 		if model_ch == '1':
 			with open(config.FEAT_DESC_DUMP + "lbp.json", "r") as outfile:
