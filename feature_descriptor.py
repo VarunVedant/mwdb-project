@@ -9,6 +9,7 @@ import os
 import json
 import numpy as np
 from skimage import feature
+import operator
 
 
 
@@ -113,3 +114,48 @@ class feature_descriptor:
 		:return: None
 		"""
 		print('\nIn compute_hog_vec')
+
+	def fetch_img_desc(img_id, model_ch):
+		if model_ch == '1':
+			with open(config.FEAT_DESC_DUMP + "lbp.json", "r") as outfile:
+				unified_hist = json.load(outfile)
+			return unified_hist[img_id + '.jpg']
+		else:
+			with open(config.FEAT_DESC_DUMP + "hog.json", "r") as outfile:
+				unified_hist = json.load(outfile)
+			return unified_hist[img_id + '.jpg']
+
+
+
+	@staticmethod
+	def k_similar_imgs(query_img_id, model_ch, k):
+		"""
+		Returns the K most similar images to a chosen image
+		:param img_id: Image ID of the image
+		:return: None
+		"""
+		query_img_vec = feature_descriptor.fetch_img_desc(query_img_id, model_ch)
+		query_img_vec_flat = np.ravel(query_img_vec)
+
+		match_scores = {}
+		for img_file in os.listdir(config.TEST_IMGS_PATH):
+			img_file_id = img_file.replace('.jpg', '')
+			if img_file_id != query_img_id:
+				img_vec = feature_descriptor.fetch_img_desc(img_file_id, model_ch)
+				img_vec_flat = np.ravel(img_vec)
+				# arr_diff = img_vec_flat - query_img_vec_flat
+				# match_scores[img_file_id] = np.sqrt(np.dot(arr_diff, arr_diff))
+				# print('\ncosine similarity: ', np.dot(img_vec_flat, query_img_vec_flat) / (np.sqrt(img_vec_flat.dot(img_vec_flat)) * np.sqrt(query_img_vec_flat.dot(query_img_vec_flat))))
+				match_scores[img_file_id] = np.dot(img_vec_flat, query_img_vec_flat) / (np.sqrt(img_vec_flat.dot(img_vec_flat)) * np.sqrt(query_img_vec_flat.dot(query_img_vec_flat)))
+		sorted_scores = sorted(match_scores.items(), key=operator.itemgetter(1))
+
+		query_image = iu.img_util.open_image_grayscale(config.TEST_IMGS_PATH + '/' + query_img_id + '.jpg')
+		iu.img_util.display_image(query_image, 'Query Image: ' + query_img_id)
+		i = k
+		for score in sorted_scores:
+			if i == 0:
+				break
+			print('\nImage ', score[0], ' --> ', score[1])
+			i -= 1
+			tmp_img = iu.img_util.open_image_grayscale(config.TEST_IMGS_PATH + '/' + score[0] + '.jpg')
+			iu.img_util.display_image(tmp_img, str(k-i) + 'th similar img: ' + score[0])

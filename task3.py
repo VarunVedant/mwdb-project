@@ -7,15 +7,13 @@ import sys
 import feature_descriptor as fd
 
 
-
 def main():
-    path = input('\nImage ID: ')
+    query_img_id = input('\nImage ID: ')
+    k = int(input('\nEnter the number of similar images you want to view: '))
     while True:
         feat_ch = input('\n\nChoose Model from the Menu\n1. LBP\n2. HOG\n3. Exit\nEnter Choice: ')
-        if feat_ch == '1':
-            fd.feature_descriptor.compute_lbp_vec(path)
-        elif feat_ch == '2':
-            fd.feature_descriptor.compute_hog_vec(path)
+        if feat_ch == '1' or feat_ch == '2':
+            fd.feature_descriptor.k_similar_imgs(query_img_id, feat_ch, k)
         elif feat_ch == '3':
             break
     pass
