@@ -126,7 +126,19 @@ class feature_descriptor:
 		:param path: Path of the directory containing images.
 		:return: None
 		"""
-		print('\nIn compute_hog_vec')
+		HOG_map = {}
+		for img_file in os.listdir(path):
+			image = io.imread(config.IMG_LIST_PATH + img_file)
+			iu.img_util.display_image(image, 'Image: ' + img_file.replace('.jpg', ''))
+			rescaled_image = rescale(image, 0.1, anti_aliasing=True)
+			hog_vec, hog_img = hog(rescaled_image, orientations=9, pixels_per_cell=(8, 8), cells_per_block=(2, 2),
+			                       visualize=True, multichannel=True)
+			HOG_map[img_file.replace('.jpg', '')] = hog_vec.tolist()
+
+		feature_descriptor_file = config.FEAT_DESC_DUMP + 'hog.json'
+		with open(feature_descriptor_file, 'w', encoding='utf-8') as outfile:
+			json.dump(HOG_map, outfile, ensure_ascii=True, indent=2)
+
 
 
 	@staticmethod
