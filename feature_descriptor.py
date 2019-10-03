@@ -172,12 +172,13 @@ class feature_descriptor:
 				img_vec = feature_descriptor.fetch_img_desc(img_file_id, model_ch)
 				img_vec_flat = np.ravel(img_vec)
 				if model_ch == '2':
-					print('In euclidean')
 					sq_diff = np.square(np.subtract(img_vec_flat, query_img_vec_flat))
 					match_scores[img_file_id] = math.sqrt(np.sum(sq_diff))
 				else:
 					# print('\ncosine similarity: ', np.dot(img_vec_flat, query_img_vec_flat) / (np.sqrt(img_vec_flat.dot(img_vec_flat)) * np.sqrt(query_img_vec_flat.dot(query_img_vec_flat))))
-					match_scores[img_file_id] = np.dot(img_vec_flat, query_img_vec_flat) / (np.sqrt(img_vec_flat.dot(img_vec_flat)) * np.sqrt(query_img_vec_flat.dot(query_img_vec_flat)))
+					sq_diff = np.square(np.subtract(img_vec_flat, query_img_vec_flat))
+					match_scores[img_file_id] = math.sqrt(np.sum(sq_diff))
+					# match_scores[img_file_id] = np.dot(img_vec_flat, query_img_vec_flat) / (np.sqrt(img_vec_flat.dot(img_vec_flat)) * np.sqrt(query_img_vec_flat.dot(query_img_vec_flat)))
 		sorted_scores = sorted(match_scores.items(), key=operator.itemgetter(1))
 
 		query_image = iu.img_util.open_image_grayscale(config.TEST_IMGS_PATH + '/' + query_img_id + '.jpg')

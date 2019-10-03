@@ -3,11 +3,10 @@
     2. Finds k most similar images to the given image ID.
     3. Displays matching score for each match in the list.
 """
-import sys
 import feature_descriptor as fd
 
 
-def main():
+def task3():
     query_img_id = input('\nImage ID: ')
     k = int(input('\nEnter the number of similar images you want to view: '))
     while True:
@@ -16,8 +15,3 @@ def main():
             fd.feature_descriptor.k_similar_imgs(query_img_id, feat_ch, k)
         elif feat_ch == '3':
             break
-    pass
-
-
-if __name__ == '__main__':
-    sys.exit(main())

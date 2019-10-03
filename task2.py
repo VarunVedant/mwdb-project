@@ -4,12 +4,11 @@
     3. Computes feature descriptors for all images in the folder
     4. Stores the feature descriptor for each image as JSON in a file corresponding to the chosen model.
 """
-import sys
 import feature_descriptor as fd
 
 
 
-def main():
+def task2():
     path = input('\nProvide the folder path: ')
     while True:
         feat_ch = input('\n\nChoose Model from the Menu\n1. LBP\n2. HOG\n3. Exit\nEnter Choice: ')
@@ -19,8 +18,3 @@ def main():
             fd.feature_descriptor.compute_hog_vec(path)
         elif feat_ch == '3':
             break
-    pass
-
-
-if __name__ == '__main__':
-    sys.exit(main())

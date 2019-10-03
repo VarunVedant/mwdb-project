@@ -3,12 +3,11 @@
     2. Accepts the type of model to use (LBP or HOG)
     3. Displays Feature Descriptor in Human Readable Form
 """
-import sys
 import feature_descriptor
 
 
 
-def main():
+def task1():
     img_id = input('\nEnter the image ID: ')
     while True:
         feat_ch = input('\n1. LBP\n2. HOG\n3. Exit\nEnter Choice: ')
@@ -18,8 +17,3 @@ def main():
             feature_descriptor.feature_descriptor.hog_feat_desc(img_id)
         elif feat_ch == '3':
             break
-    pass
-
-
-if __name__ == '__main__':
-    sys.exit(main())
