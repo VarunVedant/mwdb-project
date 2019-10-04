@@ -27,5 +27,5 @@ class hist_of_grad(feature_descriptor):
 		rescaled_image = rescale(image, 0.1, anti_aliasing=True)
 		hog_vec, hog_img = hog(rescaled_image, self.orientations, self.pixels_per_cell, self.cells_per_block, self.visualize, self.multichannel)
 		print('\nHOG vector calculated: ', hog_vec, '\nHOG Image: \n', hog_img)
-		iu.img_util.display_image(hog_img, 'HOG Image')
+		# iu.img_util.display_image(hog_img, 'HOG Image')
 		return hog_vec
